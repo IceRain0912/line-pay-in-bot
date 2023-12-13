@@ -1,0 +1,60 @@
+{
+  "name": "@line/bot-sdk",
+  "version": "5.2.0",
+  "description": "Node.js SDK for LINE Messaging API",
+  "engines": {
+    "node": ">=4"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "docs",
+    "lib"
+  ],
+  "scripts": {
+    "pretest": "npm run build",
+    "test": "API_BASE_URL=http://localhost:1234/ TEST_PORT=1234 TS_NODE_CACHE=0 mocha -r ts-node/register test/*.spec.ts",
+    "prettier": "prettier --parser typescript --trailing-comma all \"{lib,test}/**/*.ts\"",
+    "format": "npm run prettier -- --write",
+    "format:check": "npm run prettier -- -l",
+    "clean": "del-cli dist",
+    "prebuild": "npm run format:check && npm run clean",
+    "build": "tsc",
+    "docs": "gitbook install && gitbook serve docs",
+    "docs:publish": "./docs/publish.sh",
+    "release": "npm run build && npm publish --access public",
+    "precommit": "npm run format:check",
+    "prepush": "npm run format:check && npm run build && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:line/line-bot-sdk-nodejs.git"
+  },
+  "keywords": [
+    "node",
+    "line",
+    "sdk"
+  ],
+  "dependencies": {
+    "@types/body-parser": "^1.16.8",
+    "@types/file-type": "^5.2.1",
+    "@types/node": "^7.0.31",
+    "axios": "^0.16.2",
+    "body-parser": "^1.18.2",
+    "file-type": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.0.35",
+    "@types/mocha": "^2.2.41",
+    "del-cli": "^1.1.0",
+    "express": "^4.15.3",
+    "gitbook-cli": "^2.3.0",
+    "husky": "^0.14.3",
+    "mocha": "^3.4.2",
+    "prettier": "^1.8.2",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
+  },
+  "license": "Apache-2.0"
+}

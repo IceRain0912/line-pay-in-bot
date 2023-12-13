@@ -29,7 +29,7 @@ server.listen(process.env.PORT || 5000);
 server.use(session({
     secret: process.env.LINE_PAY_CHANNEL_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false 
 }));
 
 // Webhook for Messaging API.
@@ -49,12 +49,12 @@ server.post("/webhook", lineBot.middleware(botConfig), (req, res, next) => {
 
             let message = {
                 type: "template",
-                altText: "You need to purchase subscription to use this chatbot. It's 1yen/month. Do you want to puchase?",
+                altText: "This ride will cost you 80 NT dollars. Please press the confirm message to confirm this payment.",
                 template: {
                     type: "buttons",
-                    text: "You need to purchase subscription to use this chatbot. It's 1yen/month. Do you want to purchase?",
+                    text: "This ride will cost you 80 NT dollars. Please press the confirm message to confirm this payment.",
                     actions: [
-                        {type: "uri", label: "Purchase Now", uri: `https://${req.hostname}/pay?userId=${encodeURIComponent(event.source.userId)}`}
+                        {type: "uri", label: "Confirm", uri: `https://${req.hostname}/pay?userId=${encodeURIComponent(event.source.userId)}`}
                     ]
                 }
             }
@@ -79,9 +79,9 @@ server.use("/pay", (req, res, next) => {
     if (req.query.userId) req.session.userId = req.query.userId;
     next();
 }, pay.middleware({
-    productName: "My product",
-    amount: 1,
-    currency: "JPY",
+    productName: "Uber Ride",
+    amount: 80,
+    currency: "TWD",
     confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
     orderId: uuid()
 }), (req, res, next) => {
@@ -94,7 +94,7 @@ server.use("/pay", (req, res, next) => {
         stickerId: 144
     },{
         type: "text",
-        text: "Congratulations! Now your chatbot is fully functional."
+        text: "Congratulations! We got your payment."
     }]
     bot.pushMessage(req.session.userId, messages).then((response => {
         res.redirect("https://line.me/R/nv/dummy");
