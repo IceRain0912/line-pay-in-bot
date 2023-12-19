@@ -23,6 +23,7 @@ const botConfig = {
     channelSecret: process.env.LINE_BOT_CHANNEL_SECRET
 }
 const bot = new lineBot.Client(botConfig);
+const payBill = 1;
 
 server.listen(process.env.PORT || 5000);
 
@@ -49,10 +50,10 @@ server.post("/webhook", lineBot.middleware(botConfig), (req, res, next) => {
 
             let message = {
                 type: "template",
-                altText: "This ride will cost you 80 NT dollars. Please press the confirm message to confirm this payment.",
+                altText: `This ride will cost you ${payBill} NT dollars. Please press the confirm message to confirm this payment.`,
                 template: {
                     type: "buttons",
-                    text: "This ride will cost you 80 NT dollars. Please press the confirm message to confirm this payment.",
+                    text: `This ride will cost you ${payBill} NT dollars. Please press the confirm message to confirm this payment.`,
                     actions: [
                         {type: "uri", label: "Confirm", uri: `https://${req.hostname}/pay?userId=${encodeURIComponent(event.source.userId)}`}
                     ]
@@ -80,7 +81,7 @@ server.use("/pay", (req, res, next) => {
     next();
 }, pay.middleware({
     productName: "Uber Ride",
-    amount: 80,
+    amount: payBill,
     currency: "TWD",
     confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
     orderId: uuid()
@@ -94,7 +95,7 @@ server.use("/pay", (req, res, next) => {
         stickerId: 144
     },{
         type: "text",
-        text: "Congratulations! We got your payment."
+        text: "Congratulations! We got your payment. Now you can return back to the Uber app and start your ride."
     }]
     bot.pushMessage(req.session.userId, messages).then((response => {
         res.redirect("https://line.me/R/nv/dummy");
