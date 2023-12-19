@@ -7,6 +7,7 @@ const cache = require("memory-cache");
 const debug = require("debug")("pay-test");
 const uuid = require("uuid/v4");
 const session = require("express-session");
+import {distance} from "./screens/ConfirmRide";
 
 // Importing LINE Pay API SDK
 const linePay = require("line-pay");
@@ -23,7 +24,7 @@ const botConfig = {
     channelSecret: process.env.LINE_BOT_CHANNEL_SECRET
 }
 const bot = new lineBot.Client(botConfig);
-const payBill = 1;
+var payBill = parseInt(distance) * 20;
 
 server.listen(process.env.PORT || 5000);
 
